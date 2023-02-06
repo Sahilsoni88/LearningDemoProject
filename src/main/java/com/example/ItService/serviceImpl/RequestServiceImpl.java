@@ -38,6 +38,9 @@ public class RequestServiceImpl implements RequestService {
     }
     @Override
     public GetRequestsResponceDTO getRequestById(long id){
+        if (requestRepository.findById(id).get().isDeleted() == true){
+            throw new ResourceNotFoundException("request with id: " + id + " is deleted");
+        }
         RequestCustomerDTO requestCustomerDTO = RequestCustomerMapper.EntityToRequestCustomerDTO(
                 requestRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("request not found with id: " + id))
